@@ -17,6 +17,10 @@ public class loginPage extends javax.swing.JFrame {
         initComponents();
         getContentPane().setBackground(Color.white);
     }
+    
+    
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -142,6 +146,8 @@ public class loginPage extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
+        // Triggers when username and userpass is correct
+        // TODO- If else for verification
         dashboardPage dashboard = new dashboardPage();
         dashboard.setVisible(true);
 
