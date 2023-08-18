@@ -21,6 +21,8 @@ public class loginPage extends javax.swing.JFrame {
         ImageScaler("uniqclearLogo.png");
     //    ImageScaler("uniqclearLogo.png");
     }
+    
+    
     public void ImageScaler(String imagePath){
         // We retrieve the image 
         ImageIcon logoIcon = new ImageIcon(getClass().getResource(imagePath));
@@ -32,6 +34,7 @@ public class loginPage extends javax.swing.JFrame {
         logo.setIcon(i); 
     }
     
+   
     
     
     
@@ -160,6 +163,7 @@ public class loginPage extends javax.swing.JFrame {
         // TODO- If else for verification
         dashboardPage dashboard = new dashboardPage();
         dashboard.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_loginButtonActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -197,7 +201,10 @@ public class loginPage extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new loginPage().setVisible(true);
+               
             }
+            
+            
         });
         //test
     }
