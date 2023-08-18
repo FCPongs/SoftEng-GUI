@@ -6,6 +6,7 @@ package LoginDashboardPackage;
 import java.awt.Color;
 import java.awt.Image;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 /**
  *
  * @author User
@@ -20,6 +21,8 @@ public class loginPage extends javax.swing.JFrame {
         getContentPane().setBackground(Color.white);
         ImageScaler("uniqclearLogo.png");
     //    ImageScaler("uniqclearLogo.png");
+         this.setSize(787,459);
+        this.setResizable(false);
     }
     
     
@@ -161,9 +164,15 @@ public class loginPage extends javax.swing.JFrame {
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
         // Triggers when username and userpass is correct
         // TODO- If else for verification
-        dashboardPage dashboard = new dashboardPage();
-        dashboard.setVisible(true);
-        this.dispose();
+         String username = jTextField1.getText();
+        String password = jPasswordField1.getText();
+        if ("admin".equals(username) ||  "123123".equals(password)){
+            new dashboardPage().setVisible(true);
+            this.dispose();
+        }else{
+            JOptionPane.showMessageDialog(this, "Invalid Username or Password!", "Warning", JOptionPane.INFORMATION_MESSAGE);
+        }
+        
     }//GEN-LAST:event_loginButtonActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed

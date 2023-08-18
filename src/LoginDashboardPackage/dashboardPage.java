@@ -5,6 +5,7 @@
 package LoginDashboardPackage;
 
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -24,6 +25,7 @@ public class dashboardPage extends javax.swing.JFrame {
         getContentPane().setBackground(Color.white);
         ImageScaler();
         this.setTitle("Dashboard");
+        //this.setLayout(new FlowLayout(FlowLayout.CENTER));
     }
  
     public void ImageScaler(){
@@ -291,6 +293,11 @@ public class dashboardPage extends javax.swing.JFrame {
         jLabel8.setForeground(new java.awt.Color(0, 0, 0));
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel8.setText("Sales Tracker");
+        jLabel8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel8MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -529,6 +536,11 @@ public class dashboardPage extends javax.swing.JFrame {
         // TODO add your handling code here:
         new contractRecords().setVisible(true);
     }//GEN-LAST:event_jLabel6MouseClicked
+
+    private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
+        // TODO add your handling code here:
+        new salesTracker().setVisible(true);
+    }//GEN-LAST:event_jLabel8MouseClicked
 
     /**
      * @param args the command line arguments
