@@ -176,6 +176,11 @@ public class dashboardPage extends javax.swing.JFrame {
                 jLabel4FocusGained(evt);
             }
         });
+        jLabel4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel4MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -415,7 +420,9 @@ public class dashboardPage extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
-        // TODO add your handling code here:
+          // TODO add your handling code here:
+          new loginPage().setVisible(true);
+          this.dispose();
     }//GEN-LAST:event_logoutButtonActionPerformed
 
     private void newOrderClickMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newOrderClickMouseClicked
@@ -426,6 +433,11 @@ public class dashboardPage extends javax.swing.JFrame {
     private void jLabel4FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jLabel4FocusGained
         // TODO add your handling code here:
     }//GEN-LAST:event_jLabel4FocusGained
+
+    private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
+        // TODO add your handling code here:
+        new customerPage().setVisible(true);
+    }//GEN-LAST:event_jLabel4MouseClicked
 
     /**
      * @param args the command line arguments
