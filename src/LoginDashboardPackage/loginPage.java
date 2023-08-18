@@ -5,6 +5,7 @@
 package LoginDashboardPackage;
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 /**
@@ -23,7 +24,11 @@ public class loginPage extends javax.swing.JFrame {
     //    ImageScaler("uniqclearLogo.png");
          this.setSize(787,459);
         this.setResizable(false);
+        
     }
+    
+    
+    
     
     
     public void ImageScaler(String imagePath){
@@ -37,6 +42,39 @@ public class loginPage extends javax.swing.JFrame {
         logo.setIcon(i); 
     }
     
+    public boolean credentialChecker(){
+        String username = jTextField1.getText();
+        String password = String.valueOf(jPasswordField1.getPassword());
+        boolean valid = false;
+        if ("admin".equals(username) &&  "123123".equals(password)){
+            new dashboardPage().setVisible(true);
+            this.dispose();
+            valid = true;
+        }else{
+            JOptionPane.showMessageDialog(this, "Invalid Username or Password!", "Warning", JOptionPane.INFORMATION_MESSAGE);
+        }
+        return valid;
+    }
+    
+    public boolean userClick = false;
+    public boolean userNameClicked(){
+        if (userClick == false){
+            userClick=true;
+            return false;
+        }else{
+            return userClick;
+        }
+    }
+    
+    public boolean pwClick = false;
+    public boolean passwordClicked(){
+        if (pwClick == false){
+            pwClick=true;
+            return false;
+        }else{
+            return pwClick;
+        }
+    }
    
     
     
@@ -62,14 +100,32 @@ public class loginPage extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jPanel1KeyPressed(evt);
+            }
+        });
 
         logo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         logo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LoginDashboardPackage/uniqclearLogo.png"))); // NOI18N
 
         jTextField1.setText("Username");
+        jTextField1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTextField1MouseClicked(evt);
+            }
+        });
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
+            }
+        });
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextField1KeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextField1KeyTyped(evt);
             }
         });
 
@@ -106,7 +162,23 @@ public class loginPage extends javax.swing.JFrame {
             .addGap(0, 50, Short.MAX_VALUE)
         );
 
-        jPasswordField1.setText("jPasswordField1");
+        jPasswordField1.setText("Password");
+        jPasswordField1.setToolTipText("");
+        jPasswordField1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPasswordField1MouseClicked(evt);
+            }
+        });
+        jPasswordField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jPasswordField1ActionPerformed(evt);
+            }
+        });
+        jPasswordField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jPasswordField1KeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -164,20 +236,56 @@ public class loginPage extends javax.swing.JFrame {
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
         // Triggers when username and userpass is correct
         // TODO- If else for verification
-         String username = jTextField1.getText();
-        String password = jPasswordField1.getText();
-        if ("admin".equals(username) ||  "123123".equals(password)){
-            new dashboardPage().setVisible(true);
-            this.dispose();
-        }else{
-            JOptionPane.showMessageDialog(this, "Invalid Username or Password!", "Warning", JOptionPane.INFORMATION_MESSAGE);
-        }
+        credentialChecker();
         
     }//GEN-LAST:event_loginButtonActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jPasswordField1ActionPerformed
+
+    private void jTextField1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextField1MouseClicked
+        // TODO add your handling code here: 
+        if (!userNameClicked()){
+            jTextField1.setText("");
+        }
+    }//GEN-LAST:event_jTextField1MouseClicked
+
+    private void jTextField1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1KeyTyped
+
+    private void jPanel1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPanel1KeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode()== KeyEvent.VK_ENTER){
+            credentialChecker();
+        }
+    }//GEN-LAST:event_jPanel1KeyPressed
+
+    private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode()== KeyEvent.VK_ENTER){
+            credentialChecker();
+        }
+    }//GEN-LAST:event_jTextField1KeyPressed
+
+    private void jPasswordField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField1KeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode()== KeyEvent.VK_ENTER){
+            credentialChecker();
+        }
+    }//GEN-LAST:event_jPasswordField1KeyPressed
+
+    private void jPasswordField1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPasswordField1MouseClicked
+        // TODO add your handling code here:
+        if(!passwordClicked()){
+            jPasswordField1.setText("");
+        }
+    }//GEN-LAST:event_jPasswordField1MouseClicked
 
     /**
      * @param args the command line arguments
