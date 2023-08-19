@@ -27,7 +27,7 @@ public class customerPage extends javax.swing.JFrame {
         //Class.forName("com.mysql.jdbc.Driver");
         String url ="jdbc:mysql://localhost/uniqclearDB";
         String user="root";
-        String pass="password sa root";
+        String pass="yourrootpassword";
         
         try{
             con = DriverManager.getConnection(url,user,pass);
@@ -53,8 +53,8 @@ public class customerPage extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         customerTable = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        editCustomer = new javax.swing.JButton();
+        removeCustomer = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jButton4 = new javax.swing.JButton();
 
@@ -111,9 +111,16 @@ public class customerPage extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         jScrollPane1.setViewportView(customerTable);
@@ -127,13 +134,23 @@ public class customerPage extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setBackground(new java.awt.Color(40, 75, 135));
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Edit new customer");
+        editCustomer.setBackground(new java.awt.Color(40, 75, 135));
+        editCustomer.setForeground(new java.awt.Color(255, 255, 255));
+        editCustomer.setText("Edit customer");
+        editCustomer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editCustomerActionPerformed(evt);
+            }
+        });
 
-        jButton3.setBackground(new java.awt.Color(40, 75, 135));
-        jButton3.setForeground(new java.awt.Color(255, 255, 255));
-        jButton3.setText("Remove customer");
+        removeCustomer.setBackground(new java.awt.Color(40, 75, 135));
+        removeCustomer.setForeground(new java.awt.Color(255, 255, 255));
+        removeCustomer.setText("Remove customer");
+        removeCustomer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeCustomerActionPerformed(evt);
+            }
+        });
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LoginDashboardPackage/uniqclearLogo.png"))); // NOI18N
 
@@ -159,9 +176,9 @@ public class customerPage extends javax.swing.JFrame {
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(jButton1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton2)
+                                .addComponent(editCustomer)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton3))
+                                .addComponent(removeCustomer))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addGap(6, 6, 6))
                     .addGroup(jPanel3Layout.createSequentialGroup()
@@ -187,8 +204,8 @@ public class customerPage extends javax.swing.JFrame {
                 .addGap(26, 26, 26)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(editCustomer)
+                    .addComponent(removeCustomer))
                 .addGap(56, 56, 56))
         );
 
@@ -239,6 +256,63 @@ public class customerPage extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_formWindowOpened
 
+    private void removeCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeCustomerActionPerformed
+        // TODO add your handling code here:
+        //customerTable.getSelectedRow();
+        DefaultTableModel model = (DefaultTableModel)customerTable.getModel();
+        //customerTable.getModel()
+        int idColumn = 0;
+        int idRow = customerTable.getSelectedRow();
+        String selectedID = customerTable.getModel().getValueAt(idRow,idColumn).toString();
+        String sql = "DELETE FROM customer WHERE customer_id='"+selectedID + "'";
+        try{
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.executeUpdate();
+        }catch(Exception ex){
+            System.out.println("Error: "+ex.getMessage());
+        }
+        
+        if (customerTable.getSelectedRow() != -1) {
+            // remove selected row from the model
+            model.removeRow(customerTable.getSelectedRow());
+        }
+    }//GEN-LAST:event_removeCustomerActionPerformed
+
+    private void editCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editCustomerActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel)customerTable.getModel();
+        //customerTable.getModel()
+        int idColumn = 0;
+        int idRow = customerTable.getSelectedRow();
+        
+       
+        String selectedID = customerTable.getModel().getValueAt(idRow,idColumn).toString();
+        String toeditFirstName = customerTable.getModel().getValueAt(idRow,1).toString();
+        String toeditLastName = customerTable.getModel().getValueAt(idRow,2).toString();
+        String toeditMiddleName = customerTable.getModel().getValueAt(idRow,3).toString();
+        String toeditContact = customerTable.getModel().getValueAt(idRow,4).toString();
+        
+        
+         editCustomerPage editCustomer = new editCustomerPage();
+         editCustomer.selectedID = selectedID;
+         editCustomer.editFirstName.setText(toeditFirstName);
+         editCustomer.editLastName.setText(toeditLastName);
+         editCustomer.editMiddleName.setText(toeditMiddleName);
+         editCustomer.editContactNumber.setText(toeditContact);
+         
+         editCustomer.setVisible(true);
+         
+        //new editCustomerPage().setVisible(true);
+        
+        /*String sql = "SELECT FROM customer WHERE customer_id='"+selectedID + "'";
+        try{
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.executeUpdate();
+        }catch(Exception ex){
+            System.out.println("Error: "+ex.getMessage());
+        }*/
+    }//GEN-LAST:event_editCustomerActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -276,10 +350,9 @@ public class customerPage extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable customerTable;
+    private javax.swing.JButton editCustomer;
     private javax.swing.JLabel headerLogo;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -287,5 +360,6 @@ public class customerPage extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton removeCustomer;
     // End of variables declaration//GEN-END:variables
 }
