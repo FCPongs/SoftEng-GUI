@@ -5,6 +5,11 @@
 package LoginDashboardPackage;
 
 import java.awt.Color;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.PreparedStatement;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -12,12 +17,23 @@ import java.awt.Color;
  */
 public class customerPage extends javax.swing.JFrame {
 
+    Connection con; 
     /**
      * Creates new form customerPage
      */
-    public customerPage() {
+    public customerPage(){
         initComponents();
         getContentPane().setBackground(Color.white);
+        //Class.forName("com.mysql.jdbc.Driver");
+        String url ="jdbc:mysql://localhost/uniqclearDB";
+        String user="root";
+        String pass="password sa root";
+        
+        try{
+            con = DriverManager.getConnection(url,user,pass);
+        }catch(Exception ex){
+            System.out.println("Error: " + ex.getMessage());
+        }
     }
 
     /**
@@ -35,7 +51,7 @@ public class customerPage extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        customerTable = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
@@ -44,6 +60,11 @@ public class customerPage extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Customers");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
         jPanel1.setPreferredSize(new java.awt.Dimension(310, 100));
@@ -76,18 +97,26 @@ public class customerPage extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         jLabel1.setText("Customer");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        customerTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Customer ID", "First Name", "Last Name", "Middle Name", "Contact No."
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(customerTable);
 
         jButton1.setBackground(new java.awt.Color(40, 75, 135));
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
@@ -133,13 +162,13 @@ public class customerPage extends javax.swing.JFrame {
                                 .addComponent(jButton2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jButton3))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 870, Short.MAX_VALUE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addGap(6, 6, 6))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(473, 473, 473)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())))
         );
@@ -194,6 +223,22 @@ public class customerPage extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton4MouseClicked
 
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        String sql = "SELECT customer_id, first_name, last_name, middle_name, contact_num FROM customer";
+        try{
+            PreparedStatement pst = con.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+            DefaultTableModel model = (DefaultTableModel)customerTable.getModel();
+            
+            while(rs.next()){
+                model.addRow(new String[]{rs.getString(1),rs.getString(2),rs.getString(3), rs.getString(4),rs.getString(5)});
+            }
+        }catch(Exception ex){
+            System.out.println("Error: "+ex.getMessage());
+        }
+    }//GEN-LAST:event_formWindowOpened
+
     /**
      * @param args the command line arguments
      */
@@ -230,6 +275,7 @@ public class customerPage extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable customerTable;
     private javax.swing.JLabel headerLogo;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -241,6 +287,5 @@ public class customerPage extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }
