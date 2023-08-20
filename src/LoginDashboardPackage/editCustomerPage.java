@@ -15,13 +15,13 @@ import javax.swing.JOptionPane;
  *
  * @author User
  */
-public class createCustomerPage extends javax.swing.JFrame {
+public class editCustomerPage extends javax.swing.JFrame {
 
     /**
      * Creates new form createCustomerPage
      */
     Connection con;
-    public createCustomerPage() {
+    public editCustomerPage() {
         initComponents();
         getContentPane().setBackground(Color.white);
         this.setTitle("New Customer");
@@ -36,6 +36,8 @@ public class createCustomerPage extends javax.swing.JFrame {
         }
     }
 
+    public String selectedID;
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -48,9 +50,9 @@ public class createCustomerPage extends javax.swing.JFrame {
         jLayeredPane1 = new javax.swing.JLayeredPane();
         jPanel1 = new javax.swing.JPanel();
         headerLogo = new javax.swing.JLabel();
-        lastName = new javax.swing.JTextField();
-        firstName = new javax.swing.JTextField();
-        middleName = new javax.swing.JTextField();
+        editLastName = new javax.swing.JTextField();
+        editFirstName = new javax.swing.JTextField();
+        editMiddleName = new javax.swing.JTextField();
         barangay = new javax.swing.JComboBox<>();
         city = new javax.swing.JComboBox<>();
         province = new javax.swing.JComboBox<>();
@@ -59,7 +61,7 @@ public class createCustomerPage extends javax.swing.JFrame {
         se1 = new javax.swing.JRadioButton();
         se2 = new javax.swing.JRadioButton();
         se3 = new javax.swing.JRadioButton();
-        addCustomer = new javax.swing.JButton();
+        saveEditCustomer = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -76,7 +78,7 @@ public class createCustomerPage extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-        contactNumber = new javax.swing.JTextField();
+        editContactNumber = new javax.swing.JTextField();
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
@@ -113,21 +115,21 @@ public class createCustomerPage extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        lastName.addActionListener(new java.awt.event.ActionListener() {
+        editLastName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                lastNameActionPerformed(evt);
+                editLastNameActionPerformed(evt);
             }
         });
 
-        firstName.addActionListener(new java.awt.event.ActionListener() {
+        editFirstName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                firstNameActionPerformed(evt);
+                editFirstNameActionPerformed(evt);
             }
         });
 
-        middleName.addActionListener(new java.awt.event.ActionListener() {
+        editMiddleName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                middleNameActionPerformed(evt);
+                editMiddleNameActionPerformed(evt);
             }
         });
 
@@ -193,12 +195,12 @@ public class createCustomerPage extends javax.swing.JFrame {
                 .addComponent(se2))
         );
 
-        addCustomer.setBackground(new java.awt.Color(40, 75, 135));
-        addCustomer.setForeground(new java.awt.Color(255, 255, 255));
-        addCustomer.setText("Add Customer");
-        addCustomer.addActionListener(new java.awt.event.ActionListener() {
+        saveEditCustomer.setBackground(new java.awt.Color(40, 75, 135));
+        saveEditCustomer.setForeground(new java.awt.Color(255, 255, 255));
+        saveEditCustomer.setText("Save");
+        saveEditCustomer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addCustomerActionPerformed(evt);
+                saveEditCustomerActionPerformed(evt);
             }
         });
 
@@ -232,7 +234,7 @@ public class createCustomerPage extends javax.swing.JFrame {
         jLabel11.setText("Contact Number:");
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel12.setText("Add Customer");
+        jLabel12.setText("Edit Customer");
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel13.setText("Customer Type:");
@@ -255,18 +257,18 @@ public class createCustomerPage extends javax.swing.JFrame {
                                 .addComponent(jLabel2)
                                 .addGroup(layout.createSequentialGroup()
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(lastName, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(editLastName, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel3)
                                         .addComponent(jLabel6)
                                         .addComponent(jLabel7))
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(firstName, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(editFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel4))
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jLabel5)
-                                        .addComponent(middleName, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(editMiddleName, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGroup(layout.createSequentialGroup()
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(layout.createSequentialGroup()
@@ -281,7 +283,7 @@ public class createCustomerPage extends javax.swing.JFrame {
                                         .addComponent(jLabel13)
                                         .addComponent(jButton2)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(contactNumber, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(editContactNumber, javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(customerType, javax.swing.GroupLayout.Alignment.LEADING, 0, 175, Short.MAX_VALUE)))
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -290,7 +292,7 @@ public class createCustomerPage extends javax.swing.JFrame {
                                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGap(33, 33, 33))
                         .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 570, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(addCustomer, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(saveEditCustomer, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel12))
                 .addContainerGap(167, Short.MAX_VALUE))
         );
@@ -313,10 +315,10 @@ public class createCustomerPage extends javax.swing.JFrame {
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lastName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(editLastName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(firstName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(middleName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(editFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(editMiddleName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(15, 15, 15)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -339,7 +341,7 @@ public class createCustomerPage extends javax.swing.JFrame {
                         .addComponent(jLabel11))
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(contactNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(editContactNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel13)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -347,24 +349,24 @@ public class createCustomerPage extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2)
                 .addGap(3, 3, 3)
-                .addComponent(addCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(saveEditCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(63, 63, 63))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void lastNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lastNameActionPerformed
+    private void editLastNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLastNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_lastNameActionPerformed
+    }//GEN-LAST:event_editLastNameActionPerformed
 
-    private void firstNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstNameActionPerformed
+    private void editFirstNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editFirstNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_firstNameActionPerformed
+    }//GEN-LAST:event_editFirstNameActionPerformed
 
-    private void middleNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_middleNameActionPerformed
+    private void editMiddleNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editMiddleNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_middleNameActionPerformed
+    }//GEN-LAST:event_editMiddleNameActionPerformed
 
     private void se1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_se1ActionPerformed
         // TODO add your handling code here:
@@ -374,22 +376,20 @@ public class createCustomerPage extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_se1ActionPerformed
 
-    private void addCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCustomerActionPerformed
+    private void saveEditCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveEditCustomerActionPerformed
         // TODO add your handling code here:
         //Submit to database
         this.dispose();
-        String lastNameInput= "'"+lastName.getText()+"'";
-        String firstNameInput= "'"+firstName.getText()+"'";
-        String middleNameInput= "'"+middleName.getText()+"'";
-        String contactN = "'"+contactNumber.getText()+"'";
-        
-        
-        //Connection to database
+        String lastNameInput= "'"+editLastName.getText()+"'";
+        String firstNameInput= "'"+editFirstName.getText()+"'";
+        String middleNameInput= "'"+editMiddleName.getText()+"'";
+        String contactN = "'"+editContactNumber.getText()+"'";
+        //int custId = Integer.parseInt(selectedID);
         
         if (lastNameInput == null || firstNameInput == null || middleNameInput == null|| contactN== null){
             JOptionPane.showMessageDialog(this,"Please input necessary details!","Warning", JOptionPane.INFORMATION_MESSAGE);
         }else{
-            String sql = "INSERT INTO customer(first_name,middle_name,last_name,contact_num) VALUES("+firstNameInput+","+middleNameInput+","+lastNameInput+","+contactN+");";
+            String sql = "UPDATE customer SET first_name ="+firstNameInput+", middle_name ="+middleNameInput+", last_name = "+lastNameInput+", contact_num = " +contactN+" WHERE customer_id =" +selectedID+ ";";
             try{
                 PreparedStatement pst = con.prepareStatement(sql);
                 pst.executeUpdate();
@@ -403,7 +403,7 @@ public class createCustomerPage extends javax.swing.JFrame {
         
         
         
-    }//GEN-LAST:event_addCustomerActionPerformed
+    }//GEN-LAST:event_saveEditCustomerActionPerformed
 
     private void se1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_se1StateChanged
         // TODO add your handling code here:
@@ -461,12 +461,13 @@ public class createCustomerPage extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addCustomer;
     private javax.swing.JComboBox<String> barangay;
     private javax.swing.JComboBox<String> city;
-    private javax.swing.JTextField contactNumber;
     private javax.swing.JComboBox<String> customerType;
-    private javax.swing.JTextField firstName;
+    public javax.swing.JTextField editContactNumber;
+    public javax.swing.JTextField editFirstName;
+    public javax.swing.JTextField editLastName;
+    public javax.swing.JTextField editMiddleName;
     private javax.swing.JLabel headerLogo;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
@@ -486,10 +487,9 @@ public class createCustomerPage extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextField lastName;
-    private javax.swing.JTextField middleName;
     private javax.swing.JComboBox<String> province;
     private javax.swing.JComboBox<String> purok;
+    private javax.swing.JButton saveEditCustomer;
     private javax.swing.JRadioButton se1;
     private javax.swing.JRadioButton se2;
     private javax.swing.JRadioButton se3;
