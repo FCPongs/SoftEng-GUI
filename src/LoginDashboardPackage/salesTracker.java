@@ -4,7 +4,17 @@
  */
 package LoginDashboardPackage;
 import javax.swing.*;
-
+import java.awt.Color;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.PreparedStatement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author rjber
@@ -14,10 +24,18 @@ public class salesTracker extends javax.swing.JFrame {
     /**
      * Creates new form salesTracker
      */
+    Connection con;
     public salesTracker() {
         initComponents();
         //JScrollPane scroll = new JScrollPane(jPanel1,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-        
+        String url ="jdbc:mysql://localhost/uniqclearDB";
+        String user="root";
+        String pass="uniqclearDB";
+        try{
+            con = DriverManager.getConnection(url,user,pass);
+        }catch(Exception ex){
+            System.out.println("Error: " + ex.getMessage());
+        }
         
     }
 
@@ -39,17 +57,23 @@ public class salesTracker extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        expensesTable = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        totalExpenses = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Sales Tracker");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jPanel3.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -89,26 +113,24 @@ public class salesTracker extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel3.setText("Expenses");
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        expensesTable.setAutoCreateRowSorter(true);
+        expensesTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "ID", "Item Name", "Price", "Action"
+                "ID", "Item Name", "Total Amount", "Date"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Double.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(expensesTable);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setText("Date:");
@@ -126,6 +148,9 @@ public class salesTracker extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel7.setText("Total Profit:");
 
+        totalExpenses.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
+        totalExpenses.setForeground(new java.awt.Color(255, 0, 0));
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -135,7 +160,9 @@ public class salesTracker extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(979, 979, 979))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(totalExpenses)
+                        .addGap(925, 925, 925))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(661, 661, 661)
@@ -153,7 +180,9 @@ public class salesTracker extends javax.swing.JFrame {
                         .addGap(39, 39, 39)
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel6)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(totalExpenses))
                 .addContainerGap(34, Short.MAX_VALUE))
         );
 
@@ -256,7 +285,36 @@ public class salesTracker extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         this.dispose();
+        
     }//GEN-LAST:event_jButton2ActionPerformed
+public double totalExpensesNum = 0;
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        String sql = "SELECT expense_id, expense_amount, expense_description, expense_date_time FROM expense";
+        try{
+            PreparedStatement pst = con.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+            DefaultTableModel model = (DefaultTableModel)expensesTable.getModel();
+            
+            
+            
+            while(rs.next()){
+                String expID = rs.getString("expense_id");
+                String expDesc = rs.getString("expense_description");
+                String expAmount = rs.getString("expense_amount");
+                double expAmount2 = rs.getDouble("expense_amount");
+                LocalDateTime dateTime = rs.getTimestamp("expense_date_time").toLocalDateTime();
+                String formattedDateTime = dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                
+                model.addRow(new String[]{expID,expDesc,expAmount, formattedDateTime});
+                totalExpensesNum += expAmount2;
+            }
+            
+            totalExpenses.setText("PHP  " + String.valueOf(totalExpensesNum));
+        }catch(Exception ex){
+            System.out.println("Error: "+ex.getMessage());
+        }
+    }//GEN-LAST:event_formWindowOpened
 
     /**
      * @param args the command line arguments
@@ -289,11 +347,13 @@ public class salesTracker extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new salesTracker().setVisible(true);
+               
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable expensesTable;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel2;
@@ -310,6 +370,6 @@ public class salesTracker extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
+    private javax.swing.JLabel totalExpenses;
     // End of variables declaration//GEN-END:variables
 }

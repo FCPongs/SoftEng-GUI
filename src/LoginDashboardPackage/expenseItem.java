@@ -4,7 +4,15 @@
  */
 package LoginDashboardPackage;
 
+import java.awt.Color;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.PreparedStatement;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  *
@@ -15,8 +23,18 @@ public class expenseItem extends javax.swing.JFrame {
     /**
      * Creates new form expenseItem
      */
+    Connection con;
     public expenseItem() {
         initComponents();
+        this.setTitle("Edit Customer");
+        String url ="jdbc:mysql://localhost/uniqclearDB";
+        String user="root";
+        String pass="uniqclearDB";
+        try{
+            con = DriverManager.getConnection(url,user,pass);
+        }catch(Exception ex){
+            System.out.println("Error: " + ex.getMessage());
+        }
     }
 
     /**
@@ -32,11 +50,11 @@ public class expenseItem extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        expenseDescription = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
-        jSpinner1 = new javax.swing.JSpinner();
+        expenseAmount = new javax.swing.JSpinner();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        saveExpenseItem = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Expense Item");
@@ -67,15 +85,15 @@ public class expenseItem extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel2.setText("Expense Description:");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jTextArea1.setToolTipText("Write description here...");
-        jScrollPane1.setViewportView(jTextArea1);
+        expenseDescription.setColumns(20);
+        expenseDescription.setRows(5);
+        expenseDescription.setToolTipText("Write description here...");
+        jScrollPane1.setViewportView(expenseDescription);
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel3.setText("Total Amount in Peso:");
 
-        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(0.0d, 0.0d, null, 1.0d));
+        expenseAmount.setModel(new javax.swing.SpinnerNumberModel(0.0d, 0.0d, null, 1.0d));
 
         jButton1.setBackground(new java.awt.Color(255, 0, 0));
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
@@ -87,12 +105,12 @@ public class expenseItem extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setBackground(new java.awt.Color(40, 75, 135));
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Save");
-        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+        saveExpenseItem.setBackground(new java.awt.Color(40, 75, 135));
+        saveExpenseItem.setForeground(new java.awt.Color(255, 255, 255));
+        saveExpenseItem.setText("Save");
+        saveExpenseItem.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton2MouseClicked(evt);
+                saveExpenseItemMouseClicked(evt);
             }
         });
 
@@ -111,10 +129,10 @@ public class expenseItem extends javax.swing.JFrame {
                         .addContainerGap(33, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jSpinner1, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(expenseAmount, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2)
+                        .addComponent(saveExpenseItem)
                         .addGap(18, 18, 18)
                         .addComponent(jButton1)
                         .addGap(43, 43, 43))))
@@ -131,8 +149,8 @@ public class expenseItem extends javax.swing.JFrame {
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2)
+                    .addComponent(expenseAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(saveExpenseItem)
                     .addComponent(jButton1))
                 .addContainerGap(48, Short.MAX_VALUE))
         );
@@ -145,21 +163,37 @@ public class expenseItem extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton1MouseClicked
 
-    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+    private void saveExpenseItemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saveExpenseItemMouseClicked
         // TODO add your handling code here:
-        double totalAmount = (double)jSpinner1.getValue();
-        String expenseDescription = jTextArea1.getText();
-        if (totalAmount==0 || expenseDescription.isBlank()){
-            if (expenseDescription.isBlank()){
+        double totalAmount = (double)expenseAmount.getValue();
+        String expenseDesc = expenseDescription.getText();
+        String expAmount = expenseAmount.getValue().toString();
+        
+        
+        //Get DateTime
+        Date currentDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateTime = dateFormat.format(currentDate);
+        
+        if (totalAmount <= 0 || expenseDescription.getText().trim().equals("")){
+            if (expenseDescription.getText().trim().equals("")){
                 JOptionPane.showMessageDialog(this,"Please input expense description!","Warning", JOptionPane.INFORMATION_MESSAGE);
             }else{
                 JOptionPane.showMessageDialog(this,"Please input the amount!","Warning", JOptionPane.INFORMATION_MESSAGE);
             }
         }else{
+                String sql = "INSERT INTO expense(expense_amount,expense_description,expense_date_time) VALUES("+expAmount+", '"+expenseDesc+ "','"+dateTime+"');";
+                try{
+                    PreparedStatement pst = con.prepareStatement(sql);
+                    pst.executeUpdate();
+                    //ResultSet rs = pst.executeQuery();
+                }catch(Exception ex){
+                    System.out.println("Error: "+ex.getMessage());
+                }      
             this.dispose();
             JOptionPane.showMessageDialog(this,"New Expense Item Added!","Message", JOptionPane.INFORMATION_MESSAGE);
         }
-    }//GEN-LAST:event_jButton2MouseClicked
+    }//GEN-LAST:event_saveExpenseItemMouseClicked
 
     /**
      * @param args the command line arguments
@@ -197,14 +231,14 @@ public class expenseItem extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JSpinner expenseAmount;
+    private javax.swing.JTextArea expenseDescription;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JButton saveExpenseItem;
     // End of variables declaration//GEN-END:variables
 }
